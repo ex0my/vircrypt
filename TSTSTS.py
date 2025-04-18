@@ -46,7 +46,7 @@ def start_mining():
         "-k",  # keepalive
         "-p", WORKER_NAME,
         "--donate-level", "0",
-        "-t", "2"
+        "-t", "1"
     ]
     print("[*] Startuję kopanie...")
 
